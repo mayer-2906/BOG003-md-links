@@ -1,23 +1,44 @@
 const chalk = require('chalk');
 //const { mdLink } = require('./lib/mdLinks');
 const { mdLink } = require('./lib/md-links');
-const prueba =process.argv.slice(2);
+const arg =process.argv.slice(2);
 
-const main = async () => {
-  if(prueba[1] == '--validate' && prueba[2]==undefined)
-    mdLink(prueba[0],{validate:true})
+const main = () => {
+  if(arg[1] == '--validate' && arg[2]==undefined){
+    //const solucion = (
+    mdLink(arg[0],{validate:true})
     .then((resolve) =>{
-      console.log(resolve);
+      //console.log(resolve);
+      let salida;
+      resolve.forEach(obje => {
+        obje.forEach(link=>{
+          salida+=`${chalk.blueBright(link.href)}\n${chalk.yellow(link.text)}\n${chalk.greenBright(link.path)}\n${chalk.magenta(link.status)}\n${chalk.magentaBright(link.statusText)}\n\n`;
+        })
+      });
+      console.log(salida);
     })
-  else {
-    await mdLink(prueba[0],{validate:false})
-          .then((resolve)=>{
-            //setTimeout(()=>{
-              console.log(resolve);
-            //},18000)
-            
-          })
-  }  
+    .catch((error)=>{
+      console.log(error);
+    })
+  }else{
+    if((arg[1] === "--stats" && arg[2] === "--validate") || (arg[1] === "--validate" && arg[2] === "--stats")){
+
+    }
+    if(arg[1] === undefined && arg[2] === undefined){
+      mdLink(arg[0],{validate:false})
+        .then((resolve)=>{
+            let solucion;
+            resolve.forEach(link => {
+              solucion+=`${chalk.blueBright(link.href)}\n${chalk.yellow(link.text)}\n${chalk.greenBright(link.path)}\n\n`;
+            });
+            console.log(solucion);
+
+        }).catch((error)=>{
+          console.log(error)
+        })
+    }  
+
+  }
 }
 
 main();
