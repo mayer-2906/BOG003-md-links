@@ -101,3 +101,6 @@ Reflexiona y luego marca los objetivos que has llegado a entender y aplicar en t
 * [GitHub Pages](https://pages.github.com/)
 * [Node.js](https://nodejs.org/)
 * [Jest](https://jestjs.io/)
+* [Jest](https://jestjs.io/)
+* [Jest](https://jestjs.io/)
+* [Jest](https://jestjs.io/)
