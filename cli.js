@@ -1,118 +1,71 @@
-#!/usr/bin/env node 
-
-const chalk = require('chalk');
-//const { mdLink } = require('./lib/mdLinks');
-const { mdLink } = require('./lib/md-links');
-const { stats } =require('./lib/stats');
-const arg =process.argv.slice(2);
-
-const main = (path,arg1,arg2) => {
-  if(arg1 == '--validate' && arg2==undefined){
-    //const solucion = (
-    mdLink(path,{validate:true})
-    .then((resolve) =>{
-      //console.log(resolve);
-      let salida;
-      resolve.forEach(obje => {
-        obje.forEach(link=>{
-          salida+=`href: ${chalk.blueBright(link.href)}\ntext: ${chalk.yellow(link.text)}\npath: ${chalk.greenBright(link.path)}\nstatusCode: ${chalk.magenta(link.status)}\nstatus: ${chalk.magentaBright(link.statusText)}\n\n`;
-        })
-      });
-      console.log(salida);
-      //return salida
-    })
-    .catch((err)=>{
-      console.log(err);
-      //return error
-    })
-  }else{
-    if((arg1 === "--stats" && arg2 === "--validate") || (arg1 === "--validate" && arg2 === "--stats")){
-      mdLink(path,{validate:true})
-      .then((resolve) =>{
-        //console.log(resolve);
-        let salida;
-        let opcion=true
-        salida=stats(resolve, opcion);
-        console.log(salida);
-        //return salida
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-    }
-    if(arg1=== "--stats" && arg2 === undefined){
-      mdLink(path,{validate:true})
-        .then((resolve) =>{
-          //console.log(resolve);
-          let salida;
-          let opcion2=false
-          salida=stats(resolve, opcion2);
-          console.log(salida);
-          //return salida
-        })
-        .catch((err)=>{
-          console.log(error)
-        })
-    }
-    if(arg1 === undefined && arg2 === undefined){
-      mdLink(path,{validate:false})
-        .then((resolve)=>{
-            let solucion;
-            resolve.forEach(link => {
-              solucion+=`href: ${chalk.blueBright(link.href)}\ntext: ${chalk.yellow(link.text)}\npath: ${chalk.greenBright(link.path)}\n\n`;
-            });
-            console.log(solucion);
-            //return solucion
-
-        }).catch((error)=>{
-          console.log(error)
-          //return error
-        })
-    }  
-
-  }
+#!/usr/bin/env node
+const { stats: statsCLI } = require("./lib/stats"); //como hay una opcion stasts entones usamos un alias para la funcion stats
+const chalk = require("chalk");
+const { mdLink } = require("./lib/md-links");
+if (process.argv.length <= 2) {
+  //si solo hay 2 argumentos entonces no especificaron la ruta que hay que procesar
+  console.log("ERROR");
+  return -1;
 }
 
-const help = `
-  ${chalk.greenBright("md-links-Mariela-Candelo")}\n
-  ${chalk.blueBright("version 1.0.0")}\n
-`;
+const path = process.argv[2]; //ruta que se debe procesar
+const arg = process.argv.slice(2);
+//A continuacion usamos destructuring de un objecto como el siguiente construido a partir de los argumentos
+// {
+//   validate: true,
+//   help: true,
+//   contact: true,
+//   stats: true,
+//   version: true
+// }
+//para que el codigo quede mas simple
+const { help, version, contact, stats, validate } = Object.fromEntries(
+  arg.map((param) => [param.replace("--", ""), true])
+);
 
-if (arg.length < 4) {
-  if (arg[0] === "--help" || arg[0] === "-h") {
-    console.log(help);
-    return
-  }
-  if (arg[0] === undefined) {
-    console.log(help);
-    return
-  }
-  if (arg[0] === "-v" || arg[0] === "--version") {
-    console.log("1.0.0");
-    return
-  }
-  if (arg[0] === "-c" || arg[0] === "--contact") {
-    console.log("Mariela Candelo(mayercandelo.1985@gmail.com)");
-    return
-  } else {
-    //console.log("llamo a main: "+ arg[0]);
-    main(arg[0], arg[1], arg[2])
-      //.then((resolve) => console.log(resolve))
-      //.catch((err) => console.log(err));
-  }
-} else {
-  console.log(help);
+if (help) {
+  const helpMsg = `
+    ${chalk.greenBright("md-links-Mariela-Candelo")}\n
+    ${chalk.blueBright("version 1.0.0")}\n
+  `;
+  console.log(helpMsg);
+  return 0;
+}
+if (version) {
+  console.log("1.0.0");
+  return 0;
+}
+if (contact) {
+  console.log("Mariela Candelo(mayercandelo.1985@gmail.com)");
+  return 0;
 }
 
-module.exports={main}
-//console.log(process.argv);
-
-
-
-
-
-
-
-
-
-
+//solo se llama una sola vez la funcion mdLink
+mdLink(path, { validate })
+  .then((resolve) => {
+    let salida = "";
+    if (stats) {
+      salida = statsCLI(resolve, stats && validate);
+    } else {
+      resolve.forEach((link) => {
+          salida += `
+            href: ${chalk.blueBright(link.href)}
+            text: ${chalk.yellow(link.text)}
+            path: ${chalk.greenBright(link.path)}
+          `;
+          //agregamos las llaves statusCode y status unicamente si esta el parametro --validate
+          if (validate) {
+            salida += `
+            statusCode: ${chalk.magenta(link.status)}
+            status: ${chalk.magentaBright(link.statusText)}
+            `;
+          }
+        });
+    }
+    console.log(salida);
+    return 0;
+  })
+  .catch((e) => {
+    console.log(e);
+    return -1;
+  });
