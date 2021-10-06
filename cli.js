@@ -12,7 +12,7 @@ const main = (path,arg1,arg2) => {
     mdLink(path,{validate:true})
     .then((resolve) =>{
       //console.log(resolve);
-      let salida;
+      let salida='';
       resolve.forEach(obje => {
         obje.forEach(link=>{
           salida+=`href: ${chalk.blueBright(link.href)}\ntext: ${chalk.yellow(link.text)}\npath: ${chalk.greenBright(link.path)}\nstatusCode: ${chalk.magenta(link.status)}\nstatus: ${chalk.magentaBright(link.statusText)}\n\n`;
@@ -30,7 +30,7 @@ const main = (path,arg1,arg2) => {
       mdLink(path,{validate:true})
       .then((resolve) =>{
         //console.log(resolve);
-        let salida;
+        let salida='';
         let opcion=true
         salida=stats(resolve, opcion);
         console.log(salida);
@@ -57,7 +57,7 @@ const main = (path,arg1,arg2) => {
     if(arg1 === undefined && arg2 === undefined){
       mdLink(path,{validate:false})
         .then((resolve)=>{
-            let solucion;
+            let solucion='';
             resolve.forEach(link => {
               solucion+=`href: ${chalk.blueBright(link.href)}\ntext: ${chalk.yellow(link.text)}\npath: ${chalk.greenBright(link.path)}\n\n`;
             });

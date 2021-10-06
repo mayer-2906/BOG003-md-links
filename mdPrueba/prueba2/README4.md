@@ -3,6 +3,7 @@
 Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
 ## Folder Structure
+* [1. Preámbulo](#1-preámbulo)
 
 The workspace contains two folders by default, where:
 
@@ -19,4 +20,4 @@ The `JAVA PROJECTS` view allows you to manage your dependencies. More details ca
 
 * [Manipulación del DOM](https://curriculum.laboratoria.la/es/topics/browser/02-dom/03-1-dom-methods-selection)
 * [Introducción al DOM - MDN](https://developer.mozilla.org/es/docs/Web/API/Document_Object_Model/Introduction)
-* [Localizando elementos DOM usando selectores - MDN](https://developer.mozilla.org/es/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors)
+* [Modulos Import](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Sentencias/impo)
